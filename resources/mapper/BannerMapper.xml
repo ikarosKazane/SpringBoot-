@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbb.mapper.BannerMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap type="com.xbb.entity.Banner" id="BaseResultMap">
+        <result column="id" property="id"/>
+        <result column="img" property="img"/>
+        <result column="status" property="status"/>
+        <result column="name" property="name"/>
+        <result column="introduce" property="introduce"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">id, img, status, name, introduce</sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from banner
+        where id = #{id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from banner
+        where id = #{id}
+    </delete>
+    <insert id="insert" parameterType="com.xbb.entity.Banner">
+        insert into banner (id, img, status, name, introduce)
+        values (#{id}, #{img}, #{status}, #{name}, #{introduce})
+    </insert>
+    <insert id="insertSelective" parameterType="com.xbb.entity.Banner">
+        insert into banner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="img != null">img,</if>
+            <if test="status != null">status,</if>
+            <if test="name != null">name,</if>
+            <if test="introduce != null">introduce,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="img != null">#{img},</if>
+            <if test="status != null">#{status},</if>
+            <if test="name != null">#{name},</if>
+            <if test="introduce != null">#{introduce},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xbb.entity.Banner">
+        update banner
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="introduce != null">introduce = #{introduce},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.xbb.entity.Banner">
+        update banner
+        set id = #{id}, img = #{img}, status = #{status}, name = #{name}, introduce = #{introduce}
+        where id = #{id}
+    </update>
+
+    
+    <select id="selectListByPaging" resultMap="BaseResultMap">
+       select
+       t1.*
+       from banner t1
+       <where>
+         <if test="status != null">
+             and t1.status = #{status}
+         </if>
+         <if test="name != null and name != ''">
+             and t1.name like concat('%', #{name}, '%')
+         </if>
+       </where>
+       order by t1.id desc
+       limit #{page}, #{limit}
+    </select>
+
+    <select id="selectCountByPaging" resultType="java.lang.Integer">
+       select count(*)
+       from banner t1
+       <where>
+         <if test="status != null">
+             and t1.status = #{status}
+         </if>
+         <if test="name != null and name != ''">
+             and t1.name like concat('%', #{name}, '%')
+         </if>
+       </where>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from banner
+        order by id desc
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.xbb.entity.Banner">
+        select
+        <include refid="Base_Column_List" />
+        from banner
+        <where>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectListByLimit" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from banner
+        order by ${field} ${sort}
+        limit #{limit}
+    </select>
+
+    <select id="selectListByField" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from banner
+        where ${field} = ${value}
+        order by id desc
+    </select>
+
+    <select id="selectOne" resultMap="BaseResultMap" parameterType="com.xbb.entity.Banner">
+        select
+        <include refid="Base_Column_List" />
+        from banner
+        <where>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+        </where>
+    </select>
+
+    <select id="selectOneByDetails" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        t1.*
+        from banner t1
+        where t1.id = #{id}
+    </select>
+
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*) from banner
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="com.xbb.entity.Banner">
+        select count(*)
+        from banner
+        <where>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+        </where>
+    </select>
+
+    <update id="updateAll">
+        update banner
+        <if test="status != null">
+        set status = #{status}
+        </if>
+        <if test="name != null">
+        set name = #{name}
+        </if>
+    </update>
+</mapper>

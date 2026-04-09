@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbb.mapper.GoodsMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap type="com.xbb.entity.Goods" id="BaseResultMap">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="goods_type_id" property="goodsTypeId"/>
+        <result column="status" property="status"/>
+        <result column="describes" property="describes"/>
+        <result column="img" property="img"/>
+        <result column="user_id" property="userId"/>
+        <result column="price" property="price"/>
+        <result column="inventory" property="inventory"/>
+        <result column="warning" property="warning"/>
+        <result column="content" property="content"/>
+        <result column="sales_volume" property="salesVolume"/>
+        <result column="deposit" property="deposit"/>
+        <result column="creat_date" property="creatDate"/>
+        <result column="score" property="score"/>
+        <result column="brand" property="brand"/>
+        <result column="model" property="model"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">id, name, goods_type_id, status, describes, img, user_id, price, inventory, warning, content, sales_volume, deposit, creat_date, score, brand, model</sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods
+        where id = #{id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from goods
+        where id = #{id}
+    </delete>
+    <insert id="insert" parameterType="com.xbb.entity.Goods">
+        insert into goods (id, name, goods_type_id, status, describes, img, user_id, price, inventory, warning, content, sales_volume, deposit, creat_date, score, brand, model)
+        values (#{id}, #{name}, #{goodsTypeId}, #{status}, #{describes}, #{img}, #{userId}, #{price}, #{inventory}, #{warning}, #{content}, #{salesVolume}, #{deposit}, #{creatDate}, #{score}, #{brand}, #{model})
+    </insert>
+    <insert id="insertSelective" keyProperty="id" useGeneratedKeys="true" parameterType="com.xbb.entity.Goods">
+        insert into goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="goodsTypeId != null">goods_type_id,</if>
+            <if test="status != null">status,</if>
+            <if test="describes != null">describes,</if>
+            <if test="img != null">img,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="price != null">price,</if>
+            <if test="inventory != null">inventory,</if>
+            <if test="warning != null">warning,</if>
+            <if test="content != null">content,</if>
+            <if test="salesVolume != null">sales_volume,</if>
+            <if test="deposit != null">deposit,</if>
+            <if test="creatDate != null">creat_date,</if>
+            <if test="score != null">score,</if>
+            <if test="brand != null">brand,</if>
+            <if test="model != null">model,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="goodsTypeId != null">#{goodsTypeId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="describes != null">#{describes},</if>
+            <if test="img != null">#{img},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="price != null">#{price},</if>
+            <if test="inventory != null">#{inventory},</if>
+            <if test="warning != null">#{warning},</if>
+            <if test="content != null">#{content},</if>
+            <if test="salesVolume != null">#{salesVolume},</if>
+            <if test="deposit != null">#{deposit},</if>
+            <if test="creatDate != null">#{creatDate},</if>
+            <if test="score != null">#{score},</if>
+            <if test="brand != null">#{brand},</if>
+            <if test="model != null">#{model},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xbb.entity.Goods">
+        update goods
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="goodsTypeId != null">goods_type_id = #{goodsTypeId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="describes != null">describes = #{describes},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="inventory != null">inventory = #{inventory},</if>
+            <if test="warning != null">warning = #{warning},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="salesVolume != null">sales_volume = #{salesVolume},</if>
+            <if test="deposit != null">deposit = #{deposit},</if>
+            <if test="creatDate != null">creat_date = #{creatDate},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="brand != null">brand = #{brand},</if>
+            <if test="model != null">model = #{model},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.xbb.entity.Goods">
+        update goods
+        set id = #{id}, name = #{name}, goods_type_id = #{goodsTypeId}, status = #{status}, describes = #{describes}, img = #{img}, user_id = #{userId}, price = #{price}, inventory = #{inventory}, warning = #{warning}, content = #{content}, sales_volume = #{salesVolume}, deposit = #{deposit}, creat_date = #{creatDate}, score = #{score}, brand = #{brand}, model = #{model}
+        where id = #{id}
+    </update>
+
+
+    <resultMap id="ResultMap" extends="BaseResultMap" type="com.xbb.entity.Goods">
+        <association javaType="com.xbb.entity.GoodsType" property="goodsType">
+            <result column="t2_name" property="name" />
+        </association>
+        <association javaType="com.xbb.entity.User" property="user">
+            <result column="t3_name" property="name" />
+            <result column="t3_cellphone" property="cellphone" />
+            <result column="t3_avatar" property="avatar" />
+        </association>
+    </resultMap>
+
+    <select id="selectListByPaging" resultMap="ResultMap">
+        select
+        t1.*,
+        t2.name as t2_name,
+        t3.name as t3_name, t3.cellphone as t3_cellphone, t3.avatar as t3_avatar
+        from goods t1
+        left join goods_type t2 on t1.goods_type_id = t2.id
+        left join user t3 on t1.user_id = t3.id
+        <where>
+            <if test="name != null and name != ''">
+                and t1.name like concat('%', #{name}, '%')
+            </if>
+            <if test="goodsTypeId != null">
+                and t1.goods_type_id = #{goodsTypeId}
+            </if>
+            <if test="status != null">
+                and t1.status = #{status}
+            </if>
+            <if test="userId != null">
+                and t1.user_id = #{userId}
+            </if>
+            <if test="creatDate != null">
+                and t1.creat_date = #{creatDate}
+            </if>
+            <if test="brand != null and brand != ''">
+                and t1.brand like concat('%', #{brand}, '%')
+            </if>
+            <if test="model != null and model != ''">
+                and t1.model like concat('%', #{model}, '%')
+            </if>
+        </where>
+        order by t1.id desc
+        limit #{page}, #{limit}
+    </select>
+
+    <select id="selectCountByPaging" resultType="java.lang.Integer">
+        select count(*)
+        from goods t1
+        <where>
+            <if test="name != null and name != ''">
+                and t1.name like concat('%', #{name}, '%')
+            </if>
+            <if test="goodsTypeId != null">
+                and t1.goods_type_id = #{goodsTypeId}
+            </if>
+            <if test="status != null">
+                and t1.status = #{status}
+            </if>
+            <if test="userId != null">
+                and t1.user_id = #{userId}
+            </if>
+            <if test="creatDate != null">
+                and t1.creat_date = #{creatDate}
+            </if>
+            <if test="brand != null and brand != ''">
+                and t1.brand like concat('%', #{brand}, '%')
+            </if>
+            <if test="model != null and model != ''">
+                and t1.model like concat('%', #{model}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods
+        order by id desc
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.xbb.entity.Goods">
+        select
+        <include refid="Base_Column_List" />
+        from goods
+        <where>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+          <if test="goodsTypeId != null">
+              and goods_type_id = #{goodsTypeId}
+          </if>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+          <if test="creatDate != null">
+              and creat_date = #{creatDate}
+          </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectListByLimit" resultMap="ResultMap">
+       select
+        t1.*,
+        t2.name as t2_name,
+        t3.name as t3_name, t3.cellphone as t3_cellphone, t3.avatar as t3_avatar
+        from goods t1
+        left join goods_type t2 on t1.goods_type_id = t2.id
+        left join user t3 on t1.user_id = t3.id
+         where t1.status = 1
+        order by t1.${field} ${sort}
+        limit #{limit}
+    </select>
+
+    <select id="selectListByField" resultMap="ResultMap">
+      select
+        t1.*,
+        t2.name as t2_name,
+        t3.name as t3_name, t3.cellphone as t3_cellphone, t3.avatar as t3_avatar
+        from goods t1
+        left join goods_type t2 on t1.goods_type_id = t2.id
+        left join user t3 on t1.user_id = t3.id
+        where t1.${field} = ${value}
+        and t1.status = 1
+        order by t1.id desc
+    </select>
+
+    <select id="selectOne" resultMap="BaseResultMap" parameterType="com.xbb.entity.Goods">
+        select
+        <include refid="Base_Column_List" />
+        from goods
+        <where>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+          <if test="goodsTypeId != null">
+              and goods_type_id = #{goodsTypeId}
+          </if>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+          <if test="creatDate != null">
+              and creat_date = #{creatDate}
+          </if>
+        </where>
+    </select>
+
+    <select id="selectOneByDetails" parameterType="java.lang.Integer" resultMap="ResultMap">
+        select
+        t1.*,
+        t2.name as t2_name,
+        t3.name as t3_name, t3.cellphone as t3_cellphone, t3.avatar as t3_avatar
+        from goods t1
+        left join goods_type t2 on t1.goods_type_id = t2.id
+        left join user t3 on t1.user_id = t3.id
+        where t1.id = #{id}
+    </select>
+
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*) from goods
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="com.xbb.entity.Goods">
+        select count(*)
+        from goods
+        <where>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+          <if test="goodsTypeId != null">
+              and goods_type_id = #{goodsTypeId}
+          </if>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+          <if test="creatDate != null">
+              and creat_date = #{creatDate}
+          </if>
+        </where>
+    </select>
+
+    <update id="updateAll">
+        update goods
+        <if test="name != null">
+        set name = #{name}
+        </if>
+        <if test="goodsTypeId != null">
+        set goods_type_id = #{goodsTypeId}
+        </if>
+        <if test="status != null">
+        set status = #{status}
+        </if>
+        <if test="userId != null">
+        set user_id = #{userId}
+        </if>
+        <if test="creatDate != null">
+        set creat_date = #{creatDate}
+        </if>
+    </update>
+
+    <resultMap id="StatisticsResultMap" type="com.xbb.entity.Statistics">
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="value" jdbcType="INTEGER" property="value" />
+    </resultMap>
+    <select id="selectStatisticsByType" resultMap="StatisticsResultMap">
+      select
+      t1.name as name,
+      count(t2.goods_type_id) as value
+      from goods_type t1
+      left join goods t2 on t1.id = t2.goods_type_id
+      group by t2.goods_type_id
+      order by t1.id desc
+    </select>
+    <select id="selectStatisticsBySalesVolume" resultMap="StatisticsResultMap">
+      select
+      t1.name as name,
+      sum(t2.quantity) as value
+      from goods t1
+      left join goods_orders t2 on t1.id = t2.goods_id
+      where t2.status = 4
+      group by t1.id
+      order by t1.id desc
+    </select>
+    <select id="selectStatisticsByMoney" resultMap="StatisticsResultMap">
+      select
+      t1.name as name,
+      sum(t2.money) as value
+      from goods t1
+      left join goods_orders t2 on t1.id = t2.goods_id
+       where t2.status = 4
+      group by t1.id
+      order by t1.id desc
+    </select>
+    <select id="selectStatisticsByDuration" resultMap="StatisticsResultMap">
+      select
+      t1.name as name,
+      sum(t2.duration) as value
+      from goods t1
+      left join goods_orders t2 on t1.id = t2.goods_id
+       where t2.status = 4
+      group by t1.id
+      order by t1.id desc
+    </select>
+    <select id="selectStatisticsByRepair" resultMap="StatisticsResultMap">
+      select
+      t1.name as name,
+      count(t2.goods_id) as value
+      from goods t1
+      left join repair t2 on t1.id = t2.goods_id
+      group by t1.id
+      order by t1.id desc
+    </select>
+    <select id="selectListByRecommend" resultMap="StatisticsResultMap">
+      select
+      t1.id as count,
+      count(t2.goods_id) as value
+      from goods t1
+      left join goods_orders t2 on t1.id = t2.goods_id
+      where t2.user_id = #{userId}
+      group by t1.id
+      order by t1.id asc
+    </select>
+</mapper>

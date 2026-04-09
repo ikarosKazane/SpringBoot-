@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbb.mapper.GoodsCommentMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap type="com.xbb.entity.GoodsComment" id="BaseResultMap">
+        <result column="id" property="id"/>
+        <result column="goods_id" property="goodsId"/>
+        <result column="user_id" property="userId"/>
+        <result column="score" property="score"/>
+        <result column="content" property="content"/>
+        <result column="creat_time" property="creatTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">id, goods_id, user_id, score, content, creat_time</sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods_comment
+        where id = #{id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from goods_comment
+        where id = #{id}
+    </delete>
+    <insert id="insert" parameterType="com.xbb.entity.GoodsComment">
+        insert into goods_comment (id, goods_id, user_id, score, content, creat_time)
+        values (#{id}, #{goodsId}, #{userId}, #{score}, #{content}, #{creatTime})
+    </insert>
+    <insert id="insertSelective" keyProperty="id" useGeneratedKeys="true" parameterType="com.xbb.entity.GoodsComment">
+        insert into goods_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="score != null">score,</if>
+            <if test="content != null">content,</if>
+            <if test="creatTime != null">creat_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="score != null">#{score},</if>
+            <if test="content != null">#{content},</if>
+            <if test="creatTime != null">#{creatTime},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xbb.entity.GoodsComment">
+        update goods_comment
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="creatTime != null">creat_time = #{creatTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.xbb.entity.GoodsComment">
+        update goods_comment
+        set id = #{id}, goods_id = #{goodsId}, user_id = #{userId}, score = #{score}, content = #{content}, creat_time = #{creatTime}
+        where id = #{id}
+    </update>
+
+
+    <resultMap id="ResultMap" extends="BaseResultMap" type="com.xbb.entity.GoodsComment">
+        <association javaType="com.xbb.entity.Goods" property="goods">
+            <result column="t2_name" property="name" />
+        </association>
+        <association javaType="com.xbb.entity.User" property="user">
+            <result column="t3_name" property="name" />
+            <result column="t3_cellphone" property="cellphone" />
+            <result column="t3_avatar" property="avatar" />
+        </association>
+    </resultMap>
+
+    <select id="selectListByPaging" resultMap="ResultMap">
+       select
+       t1.*,
+       t2.name as t2_name,
+       t3.name as t3_name, t3.cellphone as t3_cellphone, t3.avatar as t3_avatar
+       from goods_comment t1
+       left join goods t2 on t1.goods_id = t2.id
+       left join user t3 on t1.user_id = t3.id
+       <where>
+         <if test="goodsId != null">
+             and t1.goods_id = #{goodsId}
+         </if>
+         <if test="userId != null">
+             and t1.user_id = #{userId}
+         </if>
+         <if test="content != null and content != ''">
+             and t1.content like concat('%', #{content}, '%')
+         </if>
+           <if test="name != null and name != ''">
+               and t2.name like concat('%', #{name}, '%')
+           </if>
+           <if test="staffId != null">
+               and t2.user_id = #{staffId}
+           </if>
+       </where>
+       order by t1.id desc
+       limit #{page}, #{limit}
+    </select>
+
+    <select id="selectCountByPaging" resultType="java.lang.Integer">
+       select count(*)
+       from goods_comment t1
+        left join goods t2 on t1.goods_id = t2.id
+       <where>
+         <if test="goodsId != null">
+             and t1.goods_id = #{goodsId}
+         </if>
+         <if test="userId != null">
+             and t1.user_id = #{userId}
+         </if>
+         <if test="content != null and content != ''">
+             and t1.content like concat('%', #{content}, '%')
+         </if>
+           <if test="name != null and name != ''">
+               and t2.name like concat('%', #{name}, '%')
+           </if>
+           <if test="staffId != null">
+               and t2.user_id = #{staffId}
+           </if>
+       </where>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods_comment
+        order by id desc
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.xbb.entity.GoodsComment">
+        select
+        <include refid="Base_Column_List" />
+        from goods_comment
+        <where>
+          <if test="goodsId != null">
+              and goods_id = #{goodsId}
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+          <if test="content != null and content != ''">
+              and content like concat('%', #{content}, '%')
+          </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectListByLimit" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods_comment
+        order by ${field} ${sort}
+        limit #{limit}
+    </select>
+
+    <select id="selectListByField" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods_comment
+        where ${field} = ${value}
+        order by id desc
+    </select>
+
+    <select id="selectOne" resultMap="BaseResultMap" parameterType="com.xbb.entity.GoodsComment">
+        select
+        <include refid="Base_Column_List" />
+        from goods_comment
+        <where>
+          <if test="goodsId != null">
+              and goods_id = #{goodsId}
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+          <if test="content != null and content != ''">
+              and content like concat('%', #{content}, '%')
+          </if>
+        </where>
+    </select>
+
+    <select id="selectOneByDetails" parameterType="java.lang.Integer" resultMap="ResultMap">
+        select
+        t1.*,
+        t2.name as t2_name,
+        t3.name as t3_name, t3.cellphone as t3_cellphone, t3.avatar as t3_avatar
+        from goods_comment t1
+        left join goods t2 on t1.goods_id = t2.id
+        left join user t3 on t1.user_id = t3.id
+        where t1.id = #{id}
+    </select>
+
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*) from goods_comment
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="com.xbb.entity.GoodsComment">
+        select count(*)
+        from goods_comment
+        <where>
+          <if test="goodsId != null">
+              and goods_id = #{goodsId}
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+          <if test="content != null and content != ''">
+              and content like concat('%', #{content}, '%')
+          </if>
+        </where>
+    </select>
+
+    <update id="updateAll">
+        update goods_comment
+        <if test="goodsId != null">
+        set goods_id = #{goodsId}
+        </if>
+        <if test="userId != null">
+        set user_id = #{userId}
+        </if>
+        <if test="content != null">
+        set content = #{content}
+        </if>
+    </update>
+</mapper>

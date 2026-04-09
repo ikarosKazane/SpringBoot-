@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbb.mapper.UserMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap type="com.xbb.entity.User" id="BaseResultMap">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="sex" property="sex"/>
+        <result column="email" property="email"/>
+        <result column="cellphone" property="cellphone"/>
+        <result column="address" property="address"/>
+        <result column="name" property="name"/>
+        <result column="register_time" property="registerTime"/>
+        <result column="role" property="role"/>
+        <result column="avatar" property="avatar"/>
+        <result column="token" property="token"/>
+        <result column="identity" property="identity"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">id, username, password, sex, email, cellphone, address, name, register_time, role, avatar, token, identity</sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where id = #{id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from user
+        where id = #{id}
+    </delete>
+    <insert id="insert" parameterType="com.xbb.entity.User">
+        insert into user (id, username, password, sex, email, cellphone, address, name, register_time, role, avatar, token, identity)
+        values (#{id}, #{username}, #{password}, #{sex}, #{email}, #{cellphone}, #{address}, #{name}, #{registerTime}, #{role}, #{avatar}, #{token}, #{identity})
+    </insert>
+    <insert id="insertSelective" parameterType="com.xbb.entity.User">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="sex != null">sex,</if>
+            <if test="email != null">email,</if>
+            <if test="cellphone != null">cellphone,</if>
+            <if test="address != null">address,</if>
+            <if test="name != null">name,</if>
+            <if test="registerTime != null">register_time,</if>
+            <if test="role != null">role,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="token != null">token,</if>
+            <if test="identity != null">identity,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="username != null">#{username},</if>
+            <if test="password != null">#{password},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="email != null">#{email},</if>
+            <if test="cellphone != null">#{cellphone},</if>
+            <if test="address != null">#{address},</if>
+            <if test="name != null">#{name},</if>
+            <if test="registerTime != null">#{registerTime},</if>
+            <if test="role != null">#{role},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="token != null">#{token},</if>
+            <if test="identity != null">#{identity},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xbb.entity.User">
+        update user
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="cellphone != null">cellphone = #{cellphone},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="registerTime != null">register_time = #{registerTime},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="token != null">token = #{token},</if>
+            <if test="identity != null">identity = #{identity},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.xbb.entity.User">
+        update user
+        set id = #{id}, username = #{username}, password = #{password}, sex = #{sex}, email = #{email}, cellphone = #{cellphone}, address = #{address}, name = #{name}, register_time = #{registerTime}, role = #{role}, avatar = #{avatar}, token = #{token}, identity = #{identity}
+        where id = #{id}
+    </update>
+
+    <select id="selectListByPaging" resultMap="BaseResultMap">
+       select
+       t1.*
+       from user t1
+       <where>
+         <if test="sex != null and sex != ''">
+             and t1.sex like concat('%', #{sex}, '%')
+         </if>
+         <if test="cellphone != null and cellphone != ''">
+             and t1.cellphone like concat('%', #{cellphone}, '%')
+         </if>
+         <if test="name != null and name != ''">
+             and t1.name like concat('%', #{name}, '%')
+         </if>
+         <if test="role != null">
+             and t1.role = #{role}
+         </if>
+       </where>
+       order by t1.id desc
+       limit #{page}, #{limit}
+    </select>
+
+    <select id="selectCountByPaging" resultType="java.lang.Integer">
+       select count(*)
+       from user t1
+       <where>
+         <if test="sex != null and sex != ''">
+             and t1.sex like concat('%', #{sex}, '%')
+         </if>
+         <if test="cellphone != null and cellphone != ''">
+             and t1.cellphone like concat('%', #{cellphone}, '%')
+         </if>
+         <if test="name != null and name != ''">
+             and t1.name like concat('%', #{name}, '%')
+         </if>
+         <if test="role != null">
+             and t1.role = #{role}
+         </if>
+       </where>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        order by id desc
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.xbb.entity.User">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        <where>
+          <if test="sex != null and sex != ''">
+              and sex like concat('%', #{sex}, '%')
+          </if>
+          <if test="cellphone != null and cellphone != ''">
+              and cellphone like concat('%', #{cellphone}, '%')
+          </if>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+          <if test="role != null">
+              and role = #{role}
+          </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectListByLimit" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        order by ${field} ${sort}
+        limit #{limit}
+    </select>
+
+    <select id="selectListByField" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where ${field} = ${value}
+        order by id desc
+    </select>
+
+    <select id="selectOne" resultMap="BaseResultMap" parameterType="com.xbb.entity.User">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        <where>
+          <if test="sex != null and sex != ''">
+              and sex like concat('%', #{sex}, '%')
+          </if>
+          <if test="cellphone != null and cellphone != ''">
+              and cellphone like concat('%', #{cellphone}, '%')
+          </if>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+          <if test="role != null">
+              and role = #{role}
+          </if>
+        </where>
+    </select>
+
+    <select id="selectOneByDetails" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        t1.*
+        from user t1
+        where t1.id = #{id}
+    </select>
+
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*) from user
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="com.xbb.entity.User">
+        select count(*)
+        from user
+        <where>
+          <if test="sex != null and sex != ''">
+              and sex like concat('%', #{sex}, '%')
+          </if>
+          <if test="cellphone != null and cellphone != ''">
+              and cellphone like concat('%', #{cellphone}, '%')
+          </if>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+          <if test="role != null">
+              and role = #{role}
+          </if>
+        </where>
+    </select>
+
+    <update id="updateAll">
+        update user
+        <if test="sex != null">
+        set sex = #{sex}
+        </if>
+        <if test="cellphone != null">
+        set cellphone = #{cellphone}
+        </if>
+        <if test="name != null">
+        set name = #{name}
+        </if>
+        <if test="role != null">
+        set role = #{role}
+        </if>
+    </update>
+
+    <select id="selectOneByUsername" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where username = #{username}
+    </select>
+    <select id="selectOneByToken" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where token = #{token}
+    </select>
+</mapper>

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbb.mapper.GoodsOrdersMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap type="com.xbb.entity.GoodsOrders" id="BaseResultMap">
+        <result column="id" property="id"/>
+        <result column="goods_id" property="goodsId"/>
+        <result column="number" property="number"/>
+        <result column="money" property="money"/>
+        <result column="creat_date" property="creatDate"/>
+        <result column="year" property="year"/>
+        <result column="month" property="month"/>
+        <result column="user_id" property="userId"/>
+        <result column="quantity" property="quantity"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="duration" property="duration"/>
+        <result column="status" property="status"/>
+        <result column="opinion" property="opinion"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">id, goods_id, number, money, creat_date, year, month, user_id, quantity, start_time, end_time, duration, status, opinion</sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods_orders
+        where id = #{id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from goods_orders
+        where id = #{id}
+    </delete>
+    <insert id="insert" parameterType="com.xbb.entity.GoodsOrders">
+        insert into goods_orders (id, goods_id, number, money, creat_date, year, month, user_id, quantity, start_time, end_time, duration, status, opinion)
+        values (#{id}, #{goodsId}, #{number}, #{money}, #{creatDate}, #{year}, #{month}, #{userId}, #{quantity}, #{startTime}, #{endTime}, #{duration}, #{status}, #{opinion})
+    </insert>
+    <insert id="insertSelective" keyProperty="id" useGeneratedKeys="true" parameterType="com.xbb.entity.GoodsOrders">
+        insert into goods_orders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="number != null">number,</if>
+            <if test="money != null">money,</if>
+            <if test="creatDate != null">creat_date,</if>
+            <if test="year != null">year,</if>
+            <if test="month != null">month,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="duration != null">duration,</if>
+            <if test="status != null">status,</if>
+            <if test="opinion != null">opinion,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="number != null">#{number},</if>
+            <if test="money != null">#{money},</if>
+            <if test="creatDate != null">#{creatDate},</if>
+            <if test="year != null">#{year},</if>
+            <if test="month != null">#{month},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="status != null">#{status},</if>
+            <if test="opinion != null">#{opinion},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xbb.entity.GoodsOrders">
+        update goods_orders
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="creatDate != null">creat_date = #{creatDate},</if>
+            <if test="year != null">year = #{year},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="opinion != null">opinion = #{opinion},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.xbb.entity.GoodsOrders">
+        update goods_orders
+        set id = #{id}, goods_id = #{goodsId}, number = #{number}, money = #{money}, creat_date = #{creatDate}, year = #{year}, month = #{month}, user_id = #{userId}, quantity = #{quantity}, start_time = #{startTime}, end_time = #{endTime}, duration = #{duration}, status = #{status}, opinion = #{opinion}
+        where id = #{id}
+    </update>
+
+
+    <resultMap id="ResultMap" extends="BaseResultMap" type="com.xbb.entity.GoodsOrders">
+        <association javaType="com.xbb.entity.Goods" property="goods">
+            <result column="t2_name" property="name" />
+        </association>
+        <association javaType="com.xbb.entity.User" property="user">
+            <result column="t3_name" property="name" />
+            <result column="t3_cellphone" property="cellphone" />
+            <result column="t3_avatar" property="avatar" />
+        </association>
+    </resultMap>
+
+    <select id="selectListByPaging" resultMap="ResultMap">
+       select
+       t1.*,
+       t2.name as t2_name,
+       t3.name as t3_name, t3.cellphone as t3_cellphone, t3.avatar as t3_avatar
+       from goods_orders t1
+       left join goods t2 on t1.goods_id = t2.id
+       left join user t3 on t1.user_id = t3.id
+       <where>
+         <if test="goodsId != null">
+             and t1.goods_id = #{goodsId}
+         </if>
+         <if test="number != null and number != ''">
+             and t1.number like concat('%', #{number}, '%')
+         </if>
+         <if test="creatDate != null">
+             and t1.creat_date = #{creatDate}
+         </if>
+         <if test="userId != null">
+             and t1.user_id = #{userId}
+         </if>
+         <if test="status != null">
+             and t1.status = #{status}
+         </if>
+           <if test="staffId != null">
+               and t2.user_id = #{staffId}
+           </if>
+       </where>
+       order by t1.id desc
+       limit #{page}, #{limit}
+    </select>
+
+    <select id="selectCountByPaging" resultType="java.lang.Integer">
+       select count(*)
+       from goods_orders t1
+        left join goods t2 on t1.goods_id = t2.id
+       <where>
+         <if test="goodsId != null">
+             and t1.goods_id = #{goodsId}
+         </if>
+         <if test="number != null and number != ''">
+             and t1.number like concat('%', #{number}, '%')
+         </if>
+         <if test="creatDate != null">
+             and t1.creat_date = #{creatDate}
+         </if>
+         <if test="userId != null">
+             and t1.user_id = #{userId}
+         </if>
+         <if test="status != null">
+             and t1.status = #{status}
+         </if>
+           <if test="staffId != null">
+               and t2.user_id = #{staffId}
+           </if>
+       </where>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods_orders
+        order by id desc
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.xbb.entity.GoodsOrders">
+        select
+        <include refid="Base_Column_List" />
+        from goods_orders
+        <where>
+          <if test="goodsId != null">
+              and goods_id = #{goodsId}
+          </if>
+          <if test="number != null and number != ''">
+              and number like concat('%', #{number}, '%')
+          </if>
+          <if test="creatDate != null">
+              and creat_date = #{creatDate}
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectListByLimit" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods_orders
+        order by ${field} ${sort}
+        limit #{limit}
+    </select>
+
+    <select id="selectListByField" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods_orders
+        where ${field} = ${value}
+        order by id desc
+    </select>
+
+    <select id="selectOne" resultMap="BaseResultMap" parameterType="com.xbb.entity.GoodsOrders">
+        select
+        <include refid="Base_Column_List" />
+        from goods_orders
+        <where>
+          <if test="goodsId != null">
+              and goods_id = #{goodsId}
+          </if>
+          <if test="number != null and number != ''">
+              and number like concat('%', #{number}, '%')
+          </if>
+          <if test="creatDate != null">
+              and creat_date = #{creatDate}
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+        </where>
+    </select>
+
+    <select id="selectOneByDetails" parameterType="java.lang.Integer" resultMap="ResultMap">
+        select
+        t1.*,
+        t2.name as t2_name,
+        t3.name as t3_name, t3.cellphone as t3_cellphone, t3.avatar as t3_avatar
+        from goods_orders t1
+        left join goods t2 on t1.goods_id = t2.id
+        left join user t3 on t1.user_id = t3.id
+        where t1.id = #{id}
+    </select>
+
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*) from goods_orders
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="com.xbb.entity.GoodsOrders">
+        select count(*)
+        from goods_orders
+        <where>
+          <if test="goodsId != null">
+              and goods_id = #{goodsId}
+          </if>
+          <if test="number != null and number != ''">
+              and number like concat('%', #{number}, '%')
+          </if>
+          <if test="creatDate != null">
+              and creat_date = #{creatDate}
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+        </where>
+    </select>
+
+    <update id="updateAll">
+        update goods_orders
+        <if test="goodsId != null">
+        set goods_id = #{goodsId}
+        </if>
+        <if test="number != null">
+        set number = #{number}
+        </if>
+        <if test="creatDate != null">
+        set creat_date = #{creatDate}
+        </if>
+        <if test="userId != null">
+        set user_id = #{userId}
+        </if>
+        <if test="status != null">
+        set status = #{status}
+        </if>
+    </update>
+
+    <select id="selectListByUserId" resultMap="ResultMap">
+       select
+        t1.*,
+        t2.name as t2_name
+        from goods_orders t1
+        left join goods t2 on t1.goods_id = t2.id
+        where t1.user_id = #{userId}
+        and t1.status = 1 or t1.status = 3
+        and t1.end_time > #{date}
+        order by t1.id asc
+    </select>
+</mapper>

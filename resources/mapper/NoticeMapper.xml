@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbb.mapper.NoticeMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap type="com.xbb.entity.Notice" id="BaseResultMap">
+        <result column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="summary" property="summary"/>
+        <result column="user_id" property="userId"/>
+        <result column="creat_time" property="creatTime"/>
+        <result column="img" property="img"/>
+        <result column="read_count" property="readCount"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">id, title, content, summary, user_id, creat_time, img, read_count</sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from notice
+        where id = #{id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from notice
+        where id = #{id}
+    </delete>
+    <insert id="insert" parameterType="com.xbb.entity.Notice">
+        insert into notice (id, title, content, summary, user_id, creat_time, img, read_count)
+        values (#{id}, #{title}, #{content}, #{summary}, #{userId}, #{creatTime}, #{img}, #{readCount})
+    </insert>
+    <insert id="insertSelective" keyProperty="id" useGeneratedKeys="true" parameterType="com.xbb.entity.Notice">
+        insert into notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="summary != null">summary,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="creatTime != null">creat_time,</if>
+            <if test="img != null">img,</if>
+            <if test="readCount != null">read_count,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="summary != null">#{summary},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="creatTime != null">#{creatTime},</if>
+            <if test="img != null">#{img},</if>
+            <if test="readCount != null">#{readCount},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xbb.entity.Notice">
+        update notice
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="summary != null">summary = #{summary},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="creatTime != null">creat_time = #{creatTime},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="readCount != null">read_count = #{readCount},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.xbb.entity.Notice">
+        update notice
+        set id = #{id}, title = #{title}, content = #{content}, summary = #{summary}, user_id = #{userId}, creat_time = #{creatTime}, img = #{img}, read_count = #{readCount}
+        where id = #{id}
+    </update>
+
+
+    <resultMap id="ResultMap" extends="BaseResultMap" type="com.xbb.entity.Notice">
+        <association javaType="com.xbb.entity.User" property="user">
+            <result column="t2_name" property="name" />
+            <result column="t2_cellphone" property="cellphone" />
+            <result column="t2_avatar" property="avatar" />
+        </association>
+    </resultMap>
+
+    <select id="selectListByPaging" resultMap="ResultMap">
+       select
+       t1.*,
+       t2.name as t2_name, t2.cellphone as t2_cellphone, t2.avatar as t2_avatar
+       from notice t1
+       left join user t2 on t1.user_id = t2.id
+       <where>
+         <if test="title != null and title != ''">
+             and t1.title like concat('%', #{title}, '%')
+         </if>
+         <if test="userId != null">
+             and t1.user_id = #{userId}
+         </if>
+       </where>
+       order by t1.id desc
+       limit #{page}, #{limit}
+    </select>
+
+    <select id="selectCountByPaging" resultType="java.lang.Integer">
+       select count(*)
+       from notice t1
+       <where>
+         <if test="title != null and title != ''">
+             and t1.title like concat('%', #{title}, '%')
+         </if>
+         <if test="userId != null">
+             and t1.user_id = #{userId}
+         </if>
+       </where>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from notice
+        order by id desc
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.xbb.entity.Notice">
+        select
+        <include refid="Base_Column_List" />
+        from notice
+        <where>
+          <if test="title != null and title != ''">
+              and title like concat('%', #{title}, '%')
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectListByLimit" resultMap="ResultMap">
+         select
+       t1.*,
+       t2.name as t2_name, t2.cellphone as t2_cellphone, t2.avatar as t2_avatar
+       from notice t1
+       left join user t2 on t1.user_id = t2.id
+        order by t1.${field} ${sort}
+        limit #{limit}
+    </select>
+
+    <select id="selectListByField" resultMap="ResultMap">
+         select
+       t1.*,
+       t2.name as t2_name, t2.cellphone as t2_cellphone, t2.avatar as t2_avatar
+       from notice t1
+       left join user t2 on t1.user_id = t2.id
+        where t1.${field} = ${value}
+        order by t1.id desc
+    </select>
+
+    <select id="selectOne" resultMap="BaseResultMap" parameterType="com.xbb.entity.Notice">
+        select
+        <include refid="Base_Column_List" />
+        from notice
+        <where>
+          <if test="title != null and title != ''">
+              and title like concat('%', #{title}, '%')
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+        </where>
+    </select>
+
+    <select id="selectOneByDetails" parameterType="java.lang.Integer" resultMap="ResultMap">
+        select
+        t1.*,
+        t2.name as t2_name, t2.cellphone as t2_cellphone, t2.avatar as t2_avatar
+        from notice t1
+        left join user t2 on t1.user_id = t2.id
+        where t1.id = #{id}
+    </select>
+
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*) from notice
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="com.xbb.entity.Notice">
+        select count(*)
+        from notice
+        <where>
+          <if test="title != null and title != ''">
+              and title like concat('%', #{title}, '%')
+          </if>
+          <if test="userId != null">
+              and user_id = #{userId}
+          </if>
+        </where>
+    </select>
+
+    <update id="updateAll">
+        update notice
+        <if test="title != null">
+        set title = #{title}
+        </if>
+        <if test="userId != null">
+        set user_id = #{userId}
+        </if>
+    </update>
+</mapper>

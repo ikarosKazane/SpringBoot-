@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbb.mapper.AboutMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap type="com.xbb.entity.About" id="BaseResultMap">
+        <result column="id" property="id"/>
+        <result column="cellphone" property="cellphone"/>
+        <result column="email" property="email"/>
+        <result column="address" property="address"/>
+        <result column="creat_date" property="creatDate"/>
+        <result column="status" property="status"/>
+        <result column="introduce" property="introduce"/>
+        <result column="img" property="img"/>
+        <result column="name" property="name"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">id, cellphone, email, address, creat_date, status, introduce, img, name</sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from about
+        where id = #{id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from about
+        where id = #{id}
+    </delete>
+    <insert id="insert" parameterType="com.xbb.entity.About">
+        insert into about (id, cellphone, email, address, creat_date, status, introduce, img, name)
+        values (#{id}, #{cellphone}, #{email}, #{address}, #{creatDate}, #{status}, #{introduce}, #{img}, #{name})
+    </insert>
+    <insert id="insertSelective" parameterType="com.xbb.entity.About">
+        insert into about
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="cellphone != null">cellphone,</if>
+            <if test="email != null">email,</if>
+            <if test="address != null">address,</if>
+            <if test="creatDate != null">creat_date,</if>
+            <if test="status != null">status,</if>
+            <if test="introduce != null">introduce,</if>
+            <if test="img != null">img,</if>
+            <if test="name != null">name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="cellphone != null">#{cellphone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="address != null">#{address},</if>
+            <if test="creatDate != null">#{creatDate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="introduce != null">#{introduce},</if>
+            <if test="img != null">#{img},</if>
+            <if test="name != null">#{name},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xbb.entity.About">
+        update about
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="cellphone != null">cellphone = #{cellphone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="creatDate != null">creat_date = #{creatDate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="introduce != null">introduce = #{introduce},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="name != null">name = #{name},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.xbb.entity.About">
+        update about
+        set id = #{id}, cellphone = #{cellphone}, email = #{email}, address = #{address}, creat_date = #{creatDate}, status = #{status}, introduce = #{introduce}, img = #{img}, name = #{name}
+        where id = #{id}
+    </update>
+
+    
+    <select id="selectListByPaging" resultMap="BaseResultMap">
+       select
+       t1.*
+       from about t1
+       <where>
+         <if test="cellphone != null and cellphone != ''">
+             and t1.cellphone like concat('%', #{cellphone}, '%')
+         </if>
+         <if test="creatDate != null and creatDate != ''">
+             and t1.creat_date like concat('%', #{creatDate}, '%')
+         </if>
+         <if test="status != null">
+             and t1.status = #{status}
+         </if>
+         <if test="name != null and name != ''">
+             and t1.name like concat('%', #{name}, '%')
+         </if>
+       </where>
+       order by t1.id desc
+       limit #{page}, #{limit}
+    </select>
+
+    <select id="selectCountByPaging" resultType="java.lang.Integer">
+       select count(*)
+       from about t1
+       <where>
+         <if test="cellphone != null and cellphone != ''">
+             and t1.cellphone like concat('%', #{cellphone}, '%')
+         </if>
+         <if test="creatDate != null and creatDate != ''">
+             and t1.creat_date like concat('%', #{creatDate}, '%')
+         </if>
+         <if test="status != null">
+             and t1.status = #{status}
+         </if>
+         <if test="name != null and name != ''">
+             and t1.name like concat('%', #{name}, '%')
+         </if>
+       </where>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from about
+        order by id desc
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.xbb.entity.About">
+        select
+        <include refid="Base_Column_List" />
+        from about
+        <where>
+          <if test="cellphone != null and cellphone != ''">
+              and cellphone like concat('%', #{cellphone}, '%')
+          </if>
+          <if test="creatDate != null and creatDate != ''">
+              and creat_date like concat('%', #{creatDate}, '%')
+          </if>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectListByLimit" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from about
+        order by ${field} ${sort}
+        limit #{limit}
+    </select>
+
+    <select id="selectListByField" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from about
+        where ${field} = ${value}
+        order by id desc
+    </select>
+
+    <select id="selectOne" resultMap="BaseResultMap" parameterType="com.xbb.entity.About">
+        select
+        <include refid="Base_Column_List" />
+        from about
+        <where>
+          <if test="cellphone != null and cellphone != ''">
+              and cellphone like concat('%', #{cellphone}, '%')
+          </if>
+          <if test="creatDate != null and creatDate != ''">
+              and creat_date like concat('%', #{creatDate}, '%')
+          </if>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+        </where>
+    </select>
+
+    <select id="selectOneByDetails" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        t1.*
+        from about t1
+        where t1.id = #{id}
+    </select>
+
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*) from about
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="com.xbb.entity.About">
+        select count(*)
+        from about
+        <where>
+          <if test="cellphone != null and cellphone != ''">
+              and cellphone like concat('%', #{cellphone}, '%')
+          </if>
+          <if test="creatDate != null and creatDate != ''">
+              and creat_date like concat('%', #{creatDate}, '%')
+          </if>
+          <if test="status != null">
+              and status = #{status}
+          </if>
+          <if test="name != null and name != ''">
+              and name like concat('%', #{name}, '%')
+          </if>
+        </where>
+    </select>
+
+    <update id="updateAll">
+        update about
+        <if test="cellphone != null">
+        set cellphone = #{cellphone}
+        </if>
+        <if test="creatDate != null">
+        set creat_date = #{creatDate}
+        </if>
+        <if test="status != null">
+        set status = #{status}
+        </if>
+        <if test="name != null">
+        set name = #{name}
+        </if>
+    </update>
+</mapper>
